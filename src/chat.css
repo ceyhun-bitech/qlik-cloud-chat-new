@@ -1,10 +1,34 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
-* {
+
+:root {
+  --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --msger-bg: #fff;
+  --border: 2px solid #ddd;
+  --left-msg-bg: #ececec;
+  --right-msg-bg: #579ffb;
+}
+
+
+
+
+
+body,
+html {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-html {
-  background: rgba(0, 0, 0, 0.03);
+body.chat-app {
+  font-family: "Rubik", sans-serif;
+  /* max-width: 700px; */
+  margin: 0 auto;
 }
 
 .content {
@@ -116,16 +140,6 @@ html {
   opacity: 1;
 }
 
-body,
-html {
-  height: 100%;
-}
-
-body.chat-app {
-  font-family: "Rubik", sans-serif;
-  /* max-width: 700px; */
-  margin: 0 auto;
-}
 
 .chat-output {
   flex: 1;
@@ -201,34 +215,6 @@ body.chat-app {
 
 
 /* NEW */
-:root {
-  --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  --msger-bg: #fff;
-  --border: 2px solid #ddd;
-  --left-msg-bg: #ececec;
-  --right-msg-bg: #579ffb;
-}
-
-html {
-  box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-  margin: 0;
-  padding: 0;
-  box-sizing: inherit;
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-image: var(--body-bg);
-  font-family: Helvetica, sans-serif;
-}
 
 .msger {
   display: flex;
