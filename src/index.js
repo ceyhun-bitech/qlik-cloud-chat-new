@@ -63,14 +63,15 @@ messageForm.on("submit", function (e) {
 
 function appendMessage(name, side, text) {
   //   Simple solution for small apps
+//   <div class="msg-info">
+//   <div class="msg-info-name">${name}</div>
+//   <div class="msg-info-time">${formatDate(new Date())}</div>
+// </div>
   const msgHTML = `
     <div class="msg ${side}-msg">
 
       <div class="msg-bubble">
-        <div class="msg-info">
-          <div class="msg-info-name">${name}</div>
-          <div class="msg-info-time">${formatDate(new Date())}</div>
-        </div>
+       
 
         <div class="msg-text">${text}</div>
       </div>
@@ -78,7 +79,8 @@ function appendMessage(name, side, text) {
   `;
 
   messageChat.append(msgHTML);
-  messageChat.scrollTop += 500;
+  const scrollHeight = messageChat.scrollTop() + 500
+  messageChat.animate({ scrollTop: scrollHeight }, 600);
 }
 
 function formatDate(date) {
