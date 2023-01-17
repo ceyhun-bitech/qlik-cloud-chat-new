@@ -3,12 +3,15 @@ import { AuthType } from "@qlik/sdk";
 import embed from "./configure";
 import connect from "./connect";
 
-var outputArea = $("#msger-chat");
 /* eslint-disable */
 import barchart from "@nebula.js/sn-bar-chart";
+import linechart from "@nebula.js/sn-line-chart";
+import map from "@nebula.js/sn-map";
 import { embed } from "@nebula.js/stardust";
 
+// const charts = { barchart, linechart, map };
 const charts = { barchart };
+const visualizationTypes = ["barchart", "linechart", "map"]
 
 // async function run() {
 //   const app = await connect({
@@ -37,6 +40,8 @@ const charts = { barchart };
 const messageForm = $(".msger-inputarea");
 const messageInput = $(".msger-input");
 const messageChat = $(".msger-chat");
+const oldChar = "*";
+const newChar = "\n&#9679;";
 
 // Icons made by Freepik from www.flaticon.com
 const BOT_NAME = "Bot";
@@ -61,7 +66,7 @@ messageForm.on("submit", function (e) {
   messageInput.val("");
 });
 
-function appendMessage(name, side, text) {
+function appendMessage(name, side, text, isChart) {
   //   Simple solution for small apps
 //   <div class="msg-info">
 //   <div class="msg-info-name">${name}</div>
@@ -73,7 +78,7 @@ function appendMessage(name, side, text) {
       <div class="msg-bubble">
        
 
-        <div class="msg-text">${text}</div>
+        <div class="msg-text ${isChart ? '': 'chart-text'}">${text}</div>
       </div>
     </div>
   `;
@@ -138,7 +143,7 @@ async function sendQuestion(message) {
     text: message,
     app: { id: "b139e5ee-7adc-41e5-8c1f-0b7be463729f", name: "CHAT" },
     enableVisualizations: true,
-    visualizationTypes: ["barchart"],
+    // visualizationTypes:  visualizationTypes,
   });
   const response = await fetch(`${requestUrl}/api/v1/questions/actions/ask`, {
     method: "POST",
@@ -159,7 +164,7 @@ async function sendQuestion(message) {
   if (!chatResponse.length) return  appendMessage(BOT_NAME, "left", "Please try a different query.");
 
   if ("narrative" in chatResponse[0]) {
-    const msgText =
+    let msgText =
       chatResponse[0].narrative.text;
     //   outputArea.append(`
     // <div class='user-message'>
@@ -168,6 +173,7 @@ async function sendQuestion(message) {
     //   </div>
     // </div>`);
 
+    msgText = msgText.replaceAll(oldChar,newChar);
     appendMessage(BOT_NAME, "left", msgText);
   } else if (
     "imageUrl" in chatResponse[0] ||
@@ -192,15 +198,19 @@ async function sendQuestion(message) {
           </div>`;
     } else if (imgUrlObject.length) {
       img = imgUrlObject[0].imageUrl;
-      chartElement = `<a href="https://08uu6507zw4v6cu.eu.qlikcloud.com/${img}"><img src="https://08uu6507zw4v6cu.eu.qlikcloud.com/${img}" width="600" height="600 "></a>`;
+      chartElement = `<a href="https://08uu6507zw4v6cu.eu.qlikcloud.com${img}"><img src="https://08uu6507zw4v6cu.eu.qlikcloud.com${img}" width="350" height="600 "></a>`;
     }
     if ("narrative" in chatResponse[1]) {
-      const text_r =
+      let text_r =
         chatResponse[1].narrative.text;
+        text_r = text_r.replaceAll(oldChar,newChar);
       const chartHTML = `
       <div class='user-message'>
       <div class ="message">
-      ${text_r} </br>
+      <p class="chart-text chart-header">
+      ${text_r} 
+      </p>
+     </br>
       ${chartElement}
       </div>
       </div>
@@ -213,7 +223,7 @@ async function sendQuestion(message) {
       //   </div>
       //   </div>
       // `);
-
+      console.log('chartHTML 1', chartElement)
       appendMessage(BOT_NAME, "left", chartHTML, true);
       if (nebulaObject.length) render(properties, nebulaChartId, lang);
     } else if ("nebula" in chatResponse[0]) {
@@ -225,6 +235,8 @@ async function sendQuestion(message) {
                </div>
            </div>
          `;
+
+         console.log('chartHTML 2', chartHTML)
         // outputArea.append(`
         //   <div class='user-message'>
         //       <div class='message'>
@@ -298,11 +310,12 @@ async function render(properties, nebulaChartId, lang = "en-US") {
     destroySessionObject: () => {},
   };
   const type = properties.qInfo.qType;
+  console.log('type', type);
 
   const n = embed(app, {
     // Load Sense themes
     context: {
-      theme: "bitechnology-new",
+      theme: "light",
       language: lang,
       constraints: {
         // Disable selections (constraint)

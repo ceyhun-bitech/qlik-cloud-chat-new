@@ -205,6 +205,15 @@ body.chat-app {
   margin-left: 10px;
 }
 
+.chart-text {
+  white-space: break-spaces;
+}
+
+.chart-text.chart-header {
+  margin: 0;
+  line-height: 1;
+}
+
 .nebula-chart {
   min-width: 340px;
   height: 400px;
@@ -258,6 +267,7 @@ body.chat-app {
   align-items: flex-end;
   margin-bottom: 10px;
 }
+
 .msg:last-of-type {
   margin: 0;
 }
