@@ -223,7 +223,6 @@ async function sendQuestion(message) {
       //   </div>
       //   </div>
       // `);
-      console.log('chartHTML 1', chartElement)
       appendMessage(BOT_NAME, "left", chartHTML, true);
       if (nebulaObject.length) render(properties, nebulaChartId, lang);
     } else if ("nebula" in chatResponse[0]) {
@@ -236,7 +235,6 @@ async function sendQuestion(message) {
            </div>
          `;
 
-         console.log('chartHTML 2', chartHTML)
         // outputArea.append(`
         //   <div class='user-message'>
         //       <div class='message'>
@@ -310,7 +308,6 @@ async function render(properties, nebulaChartId, lang = "en-US") {
     destroySessionObject: () => {},
   };
   const type = properties.qInfo.qType;
-  console.log('type', type);
 
   const n = embed(app, {
     // Load Sense themes
