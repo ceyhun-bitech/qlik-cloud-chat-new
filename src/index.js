@@ -1,7 +1,8 @@
 /* eslint-disable */
 import { AuthType } from "@qlik/sdk";
-import embed from "./configure";
+// import embed from "./configure";
 import connect from "./connect";
+import config from "./config";
 
 /* eslint-disable */
 import barchart from "@nebula.js/sn-bar-chart";
@@ -9,33 +10,35 @@ import linechart from "@nebula.js/sn-line-chart";
 import map from "@nebula.js/sn-map";
 import { embed } from "@nebula.js/stardust";
 
-// const charts = { barchart, linechart, map };
-const charts = { barchart };
-const visualizationTypes = ["barchart", "linechart", "map"]
+const charts = { barchart, linechart, map };
+// const charts = { barchart };
+const visualizationTypes = ["barchart", "linechart", "map"];
 
-// async function run() {
-//   const app = await connect({
-//     // connectionType: '<AuthType.SOME_CONNECTION_TYPE>',
-//     url: 'https://08uu6507zw4v6cu.eu.qlikcloud.com',
-//     appId: 'b139e5ee-7adc-41e5-8c1f-0b7be463729f',
+async function run() {
+  const app = await connect({
+    connectionType: "WebIntegration",
+    url: "https://08uu6507zw4v6cu.eu.qlikcloud.com",
+    appId: "b139e5ee-7adc-41e5-8c1f-0b7be463729f",
 
-//     // you should use only one of below keys
-//     // based on your `connectionType`
-//     // clientId: '<Qlik OAuth client id>',
-//     webIntegrationId: 'wXcLRgyI2s_94ZX7uOGSSnfk-ta14WSm',
-//   });
+    // you should use only one of below keys
+    // based on your `connectionType`
+    // clientId: '<Qlik OAuth client id>',
+    webIntegrationId: "wXcLRgyI2s_94ZX7uOGSSnfk-ta14WSm",
+  });
 
-//   // İstemci Kimliği: c461b5e68cda7bbaa50c4c2d3d116dfa,
-//   // İstemci parolası: e65903d1d80f9ceae1466a8b538c6e9d2f7a40a2226d7fd34edebf40e02e767c
+  // İstemci Kimliği: c461b5e68cda7bbaa50c4c2d3d116dfa,
+  // İstemci parolası: e65903d1d80f9ceae1466a8b538c6e9d2f7a40a2226d7fd34edebf40e02e767c
 
-//   const n = embed(app);
+  const n = embed(app);
 
-//   (await n.selections()).mount(document.querySelector('.toolbar'));
+  (await n.selections()).mount(document.querySelector(".toolbar"));
 
-//   // n.render({});
-// }
+  // n.render({});
+}
 
 // run();
+
+
 
 const messageForm = $(".msger-inputarea");
 const messageInput = $(".msger-input");
@@ -46,6 +49,24 @@ const newChar = "\n&#9679;";
 // Icons made by Freepik from www.flaticon.com
 const BOT_NAME = "Bot";
 const PERSON_NAME = "You";
+
+
+async function getThemes() {
+  const requestUrl = "https://08uu6507zw4v6cu.eu.qlikcloud.com";
+  const themeResponse = await fetch(`${requestUrl}/api/v1/themes`, {
+    method: "GET",
+    headers: {
+      Authorization:
+        "Bearer eyJhbGciOiJFUzM4NCIsImtpZCI6ImQyMmJhYTc0LTM1YmEtNGM5Mi1hZjEzLTJkMGM2ODM4YzhhMiIsInR5cCI6IkpXVCJ9.eyJzdWJUeXBlIjoidXNlciIsInRlbmFudElkIjoiWDZuZXl4WTNncEtOM21WZTZIdzhLX0ltMXh5UzBSZkQiLCJqdGkiOiJkMjJiYWE3NC0zNWJhLTRjOTItYWYxMy0yZDBjNjgzOGM4YTIiLCJhdWQiOiJxbGlrLmFwaSIsImlzcyI6InFsaWsuYXBpL2FwaS1rZXlzIiwic3ViIjoiaUF6eUxZRk9Wd1VZV2cwX0ZtUWROOFk0azMzZGZMVVgifQ.gPEhRnfmMlriUPDHj-Fsitcqspn72gjGc2vxTv_G3PkmX5MDf3JQfGjNsN-xNDDtozF-IaLVQ3ZrIMYQyGcaoX4f03uSl9plsJIqxGWEe3UzVC6E-40VyKO0ttSEvPPl",
+      "Content-Type": "application/json",
+      "qlik-web-integration-id": "wXcLRgyI2s_94ZX7uOGSSnfk-ta14WSm",
+    },
+  });
+
+  const themeList = await themeResponse.json();
+  return themeList;
+}
+
 
 messageForm.on("submit", function (e) {
   e.preventDefault();
@@ -68,23 +89,23 @@ messageForm.on("submit", function (e) {
 
 function appendMessage(name, side, text, isChart) {
   //   Simple solution for small apps
-//   <div class="msg-info">
-//   <div class="msg-info-name">${name}</div>
-//   <div class="msg-info-time">${formatDate(new Date())}</div>
-// </div>
+  //   <div class="msg-info">
+  //   <div class="msg-info-name">${name}</div>
+  //   <div class="msg-info-time">${formatDate(new Date())}</div>
+  // </div>
   const msgHTML = `
     <div class="msg ${side}-msg">
 
       <div class="msg-bubble">
        
 
-        <div class="msg-text ${isChart ? '': 'chart-text'}">${text}</div>
+        <div class="msg-text ${isChart ? "" : "chart-text"}">${text}</div>
       </div>
     </div>
   `;
 
   messageChat.append(msgHTML);
-  const scrollHeight = messageChat.scrollTop() + 500
+  const scrollHeight = messageChat.scrollTop() + 500;
   messageChat.animate({ scrollTop: scrollHeight }, 600);
 }
 
@@ -143,7 +164,7 @@ async function sendQuestion(message) {
     text: message,
     app: { id: "b139e5ee-7adc-41e5-8c1f-0b7be463729f", name: "CHAT" },
     enableVisualizations: true,
-    // visualizationTypes:  visualizationTypes,
+    visualizationTypes: visualizationTypes,
   });
   const response = await fetch(`${requestUrl}/api/v1/questions/actions/ask`, {
     method: "POST",
@@ -155,17 +176,18 @@ async function sendQuestion(message) {
     },
     body: data,
   });
+
   const brokerResponse = await response.json();
   let properties;
   let lang = "en-US";
 
   const chatResponse = brokerResponse.conversationalResponse.responses;
 
-  if (!chatResponse.length) return  appendMessage(BOT_NAME, "left", "Please try a different query.");
+  if (!chatResponse.length)
+    return appendMessage(BOT_NAME, "left", "Please try a different query.");
 
   if ("narrative" in chatResponse[0]) {
-    let msgText =
-      chatResponse[0].narrative.text;
+    let msgText = chatResponse[0].narrative.text;
     //   outputArea.append(`
     // <div class='user-message'>
     //   <div class='message'>
@@ -173,7 +195,7 @@ async function sendQuestion(message) {
     //   </div>
     // </div>`);
 
-    msgText = msgText.replaceAll(oldChar,newChar);
+    msgText = msgText.replaceAll(oldChar, newChar);
     appendMessage(BOT_NAME, "left", msgText);
   } else if (
     "imageUrl" in chatResponse[0] ||
@@ -181,15 +203,12 @@ async function sendQuestion(message) {
   ) {
     let chartElement, img;
     const nebulaChartId = `nebula-chart-${new Date().getTime()}`;
-    const nebulaObject = chatResponse.filter(
-      (x) => x.type === "nebula"
-    );
-    const imgUrlObject = chatResponse.filter(
-      (x) => x.type === "chart"
-    );
+    const nebulaObject = chatResponse.filter((x) => x.type === "nebula");
+    const imgUrlObject = chatResponse.filter((x) => x.type === "chart");
     if (nebulaObject.length) {
       properties = { ...nebulaObject[0].renderVisualization.data };
       properties.color.paletteColor.index = 3;
+      properties.dataPoint.show = true;
       lang = nebulaObject[0].renderVisualization.language;
       chartElement = `<div class='user-message'>
             <div class='message'>
@@ -198,12 +217,11 @@ async function sendQuestion(message) {
           </div>`;
     } else if (imgUrlObject.length) {
       img = imgUrlObject[0].imageUrl;
-      chartElement = `<a href="https://08uu6507zw4v6cu.eu.qlikcloud.com${img}"><img src="https://08uu6507zw4v6cu.eu.qlikcloud.com${img}" width="350" height="600 "></a>`;
+      chartElement = `<a href="https://08uu6507zw4v6cu.eu.qlikcloud.com${img}"><img src="https://08uu6507zw4v6cu.eu.qlikcloud.com${img}" width="350" height="auto"></a>`;
     }
     if ("narrative" in chatResponse[1]) {
-      let text_r =
-        chatResponse[1].narrative.text;
-        text_r = text_r.replaceAll(oldChar,newChar);
+      let text_r = chatResponse[1].narrative.text;
+      text_r = text_r.replaceAll(oldChar, newChar);
       const chartHTML = `
       <div class='user-message'>
       <div class ="message">
@@ -255,22 +273,27 @@ async function sendQuestion(message) {
         <img src="https://08uu6507zw4v6cu.eu.qlikcloud.com/${img}" width="300" height="200">
         </div>
       </div>
-    `
-    //   outputArea.append(`
-    //   <div class='user-message'>
-    //     <div class='message'>
-    //     <img src="https://08uu6507zw4v6cu.eu.qlikcloud.com/${img}" width="300" height="200">
-    //     </div>
-    //   </div>
-    // `);
+    `;
+      //   outputArea.append(`
+      //   <div class='user-message'>
+      //     <div class='message'>
+      //     <img src="https://08uu6507zw4v6cu.eu.qlikcloud.com/${img}" width="300" height="200">
+      //     </div>
+      //   </div>
+      // `);
 
-    appendMessage(BOT_NAME, "left", chartHTML, true);
+      appendMessage(BOT_NAME, "left", chartHTML, true);
     }
   }
 }
 
 async function render(properties, nebulaChartId, lang = "en-US") {
+  // GET THEME
+const res = await getThemes();
+const themeList = res.data;
+  // PROPERTIES
   properties = properties;
+  console.log('properties', properties)
   if (properties) {
     properties.reducedHyperCube = properties.qHyperCube;
   }
@@ -309,24 +332,42 @@ async function render(properties, nebulaChartId, lang = "en-US") {
   };
   const type = properties.qInfo.qType;
 
+
   const n = embed(app, {
     // Load Sense themes
     context: {
-      theme: "light",
+      theme: "bitechnology-new",
       language: lang,
       constraints: {
         // Disable selections (constraint)
         select: true,
       },
     },
+    themes: [
+      {
+        id: "bitechnology-new",
+        load:  () => Promise.resolve(themeList[1]),
+      },
+    ],
     types: [
       {
         name: type,
-        load: async () => charts[type],
+        load:  () => Promise.resolve(charts[type]),
+        // load: async () => Promise.resolve(window["sn-line-chart"]),
       },
     ],
   });
 
+
+  console.log('options', {
+    type,
+    element: document.querySelector(`#${nebulaChartId}`),
+    properties,
+    options: {
+      direction: "ltr",
+      freeResize: true,
+    },
+  })
   await n.render({
     type,
     element: document.querySelector(`#${nebulaChartId}`),
