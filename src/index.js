@@ -1,8 +1,4 @@
 /* eslint-disable */
-import { AuthType } from "@qlik/sdk";
-// import embed from "./configure";
-import connect from "./connect";
-import config from "./config";
 
 /* eslint-disable */
 import barchart from "@nebula.js/sn-bar-chart";
@@ -14,29 +10,6 @@ const charts = { barchart, linechart, map };
 // const charts = { barchart };
 const visualizationTypes = ["barchart", "linechart", "map"];
 
-async function run() {
-  const app = await connect({
-    connectionType: "WebIntegration",
-    url: "https://08uu6507zw4v6cu.eu.qlikcloud.com",
-    appId: "b139e5ee-7adc-41e5-8c1f-0b7be463729f",
-
-    // you should use only one of below keys
-    // based on your `connectionType`
-    // clientId: '<Qlik OAuth client id>',
-    webIntegrationId: "wXcLRgyI2s_94ZX7uOGSSnfk-ta14WSm",
-  });
-
-  // İstemci Kimliği: c461b5e68cda7bbaa50c4c2d3d116dfa,
-  // İstemci parolası: e65903d1d80f9ceae1466a8b538c6e9d2f7a40a2226d7fd34edebf40e02e767c
-
-  const n = embed(app);
-
-  (await n.selections()).mount(document.querySelector(".toolbar"));
-
-  // n.render({});
-}
-
-// run();
 
 
 
@@ -72,14 +45,6 @@ messageForm.on("submit", function (e) {
   e.preventDefault();
   var message = messageInput.val();
   if (!message) return;
-  // outputArea.append(`
-  //   <div class=''>
-  //     <div class='message'>
-  //       ${message}
-  //     </div>
-  //   </div>
-  // `);
-
   appendMessage(PERSON_NAME, "right", message);
 
   console.log("send question");
@@ -88,11 +53,6 @@ messageForm.on("submit", function (e) {
 });
 
 function appendMessage(name, side, text, isChart) {
-  //   Simple solution for small apps
-  //   <div class="msg-info">
-  //   <div class="msg-info-name">${name}</div>
-  //   <div class="msg-info-time">${formatDate(new Date())}</div>
-  // </div>
   const msgHTML = `
     <div class="msg ${side}-msg">
 
@@ -109,54 +69,28 @@ function appendMessage(name, side, text, isChart) {
   messageChat.animate({ scrollTop: scrollHeight }, 600);
 }
 
-function formatDate(date) {
-  const h = "0" + date.getHours();
-  const m = "0" + date.getMinutes();
 
-  return `${h.slice(-2)}:${m.slice(-2)}`;
-}
-
-$("#speak").on("click", function (e) {
-  const speak = document.getElementById("speak");
+// $("#speak").on("click", function (e) {
+$(".msger-input").on("focus", function (e) {
+  // const speak = document.getElementById("speak");
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
-  (recognition.lang = "en-US"),
-    // speak.addEventListener('click', function() {
+  recognition.lang = "en-US"
     recognition.start();
-  // })
 
   recognition.onresult = function (e) {
     const message = e.results[0][0].transcript;
-    // outputArea.append(`
-    //   <div class='bot-message'>
-    //     <div class='message'>
-    //       ${message}
-    //     </div>
-    //   </div>
-    // `);
+ 
     appendMessage(PERSON_NAME, "right", message);
 
     sendQuestion(message);
   };
 });
+// });
 
-// const requestUrl = 'https://08uu6507zw4v6cu.eu.qlikcloud.com';
-// const data = JSON.stringify({
-//   text: message,
-//   app: { id: "b139e5ee-7adc-41e5-8c1f-0b7be463729f", name: "CHAT" },
-//   enableVisualizations: true,
-//   visualizationTypes: ["barchart"],
-// });
-// const response = await fetch(`${requestUrl}/api/v1/questions/actions/ask`, {
-//   method: "POST",
-//   headers: {
-//     Authorization: "Bearer eyJhbGciOiJFUzM4NCIsImtpZCI6ImQyMmJhYTc0LTM1YmEtNGM5Mi1hZjEzLTJkMGM2ODM4YzhhMiIsInR5cCI6IkpXVCJ9.eyJzdWJUeXBlIjoidXNlciIsInRlbmFudElkIjoiWDZuZXl4WTNncEtOM21WZTZIdzhLX0ltMXh5UzBSZkQiLCJqdGkiOiJkMjJiYWE3NC0zNWJhLTRjOTItYWYxMy0yZDBjNjgzOGM4YTIiLCJhdWQiOiJxbGlrLmFwaSIsImlzcyI6InFsaWsuYXBpL2FwaS1rZXlzIiwic3ViIjoiaUF6eUxZRk9Wd1VZV2cwX0ZtUWROOFk0azMzZGZMVVgifQ.gPEhRnfmMlriUPDHj-Fsitcqspn72gjGc2vxTv_G3PkmX5MDf3JQfGjNsN-xNDDtozF-IaLVQ3ZrIMYQyGcaoX4f03uSl9plsJIqxGWEe3UzVC6E-40VyKO0ttSEvPPl",
-//     "Content-Type": "application/json",
-//     "qlik-web-integration-id": "wXcLRgyI2s_94ZX7uOGSSnfk-ta14WSm",
-//   },
-//   body: data,
-// });
+
+
 
 async function sendQuestion(message) {
   const requestUrl = "https://08uu6507zw4v6cu.eu.qlikcloud.com";
@@ -188,12 +122,7 @@ async function sendQuestion(message) {
 
   if ("narrative" in chatResponse[0]) {
     let msgText = chatResponse[0].narrative.text;
-    //   outputArea.append(`
-    // <div class='user-message'>
-    //   <div class='message'>
-    //     ${temp}
-    //   </div>
-    // </div>`);
+  
 
     msgText = msgText.replaceAll(oldChar, newChar);
     appendMessage(BOT_NAME, "left", msgText);
@@ -233,14 +162,7 @@ async function sendQuestion(message) {
       </div>
       </div>
     `;
-      //   outputArea.append(`
-      //   <div class='user-message'>
-      //   <div class ="message">
-      //   ${text_r} </br>
-      //   ${chartElement}
-      //   </div>
-      //   </div>
-      // `);
+
       appendMessage(BOT_NAME, "left", chartHTML, true);
       if (nebulaObject.length) render(properties, nebulaChartId, lang);
     } else if ("nebula" in chatResponse[0]) {
@@ -253,18 +175,10 @@ async function sendQuestion(message) {
            </div>
          `;
 
-        // outputArea.append(`
-        //   <div class='user-message'>
-        //       <div class='message'>
-        //         <div class='nebula-chart'  id="${nebulaChartId}"></div>
-        //       </div>
-        //   </div>
-        // `);
 
         appendMessage(BOT_NAME, "left", chartHTML, true);
         render(properties, nebulaChartId, lang);
 
-        // appendMessage(BOT_NAME, BOT_IMG, "left", chartHTML, isChart);
       }
     } else {
       const chartHTML = `
@@ -274,13 +188,6 @@ async function sendQuestion(message) {
         </div>
       </div>
     `;
-      //   outputArea.append(`
-      //   <div class='user-message'>
-      //     <div class='message'>
-      //     <img src="https://08uu6507zw4v6cu.eu.qlikcloud.com/${img}" width="300" height="200">
-      //     </div>
-      //   </div>
-      // `);
 
       appendMessage(BOT_NAME, "left", chartHTML, true);
     }
@@ -378,3 +285,5 @@ const themeList = res.data;
     },
   });
 }
+
+
