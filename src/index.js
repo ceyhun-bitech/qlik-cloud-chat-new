@@ -70,9 +70,8 @@ function appendMessage(name, side, text, isChart) {
 }
 
 
-// $("#speak").on("click", function (e) {
-$(".msger-input").on("focus", function (e) {
-  // const speak = document.getElementById("speak");
+$("#speak").on("click", function (e) {
+  const speak = document.getElementById("speak");
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
@@ -87,7 +86,6 @@ $(".msger-input").on("focus", function (e) {
     sendQuestion(message);
   };
 });
-// });
 
 
 
